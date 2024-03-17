@@ -1,6 +1,6 @@
 include("AcousticModes.jl")
 using .AcousticModes
-using CairoMakie
+using GLMakie
 
 ω = 10.0
 q = 5.0
