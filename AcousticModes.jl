@@ -70,14 +70,14 @@ module AcousticModes
         transformer = [1.0 0.0]
         return f!, transformer
     end
-    
+
     function impResp(sam::T; dt=1.0, tmax=1.0) where T <: AcousticMode
         f!, transformer = generateAcousticProblem(sam)
         outer_u₀ = [0.0]
         u₀ =  outer_u₀ * transformer
         tspan = [0.0, tmax]
         impulse_t = dt*4.0
-        impulse_fun =x -> (x < impulse_t ? 1.0/impulse_t : 0.0)
+        impulse_fun = x -> (x < impulse_t ? 1.0/impulse_t : 0.0)
         impulse_dfun(x) = let 
             if x < impulse_t / 2
                 1.0/impulse_t/dt/2
@@ -86,10 +86,8 @@ module AcousticModes
             else
                 0.0
             end
-            
         end
         pars = [impulse_fun, impulse_dfun]
-        
         prob = ODEProblem(f!, u₀, tspan, pars, dt=dt)
         sol = solve(prob,Tsit5(),saveat=0:dt:tmax)#Rosenbrock23())
         return sol
